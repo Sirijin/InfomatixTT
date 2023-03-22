@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="create_author_table" author="Pocht">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="author"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="author">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_author"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+    </changeSet>
+
+
+    <changeSet id="create_book_table" author="Pocht">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="book"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="book">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_book"/>
+            </column>
+            <column name="title" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="year_of_publishing" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="publisher_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+
+    <changeSet id="create_publisher_table" author="Pocht">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="publisher"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="publisher">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_publisher"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+
+    <changeSet id="create_author_book_table" author="Pocht">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="author_book"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="author_book">
+            <column name="author_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="author_book" columnNames="author_id, book_id"/>
+
+    </changeSet>
+
+
+    <changeSet id="add_foreign_keys_to_author_book_table" author="Pocht">
+
+        <preConditions>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_author_book_author"/>
+                <foreignKeyConstraintExists foreignKeyName="fk_author_book_book"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseTableName="author_book"
+                                 baseColumnNames="author_id"
+                                 referencedTableName="author"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_author_book_author"/>
+
+        <addForeignKeyConstraint baseTableName="author_book"
+                                 baseColumnNames="book_id"
+                                 referencedTableName="book"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_author_book_book"/>
+
+    </changeSet>
+
+
+    <changeSet id="add_foreign_key_to_book_table" author="Pocht">
+
+        <preConditions>
+            <not>
+                <foreignKeyConstraintExists foreignKeyTableName="book" foreignKeyName="fk_book_on_publisher"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseTableName="book"
+                                 baseColumnNames="publisher_id"
+                                 referencedTableName="publisher"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_book_on_publisher"/>
+
+    </changeSet>
+
+</databaseChangeLog>
