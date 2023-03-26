@@ -135,4 +135,15 @@
 
     </changeSet>
 
+    <changeSet id="insert_data_into_tables" author="Pocht">
+        <preConditions onFail="MARK_RAN">
+            <tableIsEmpty tableName="author"/>
+            <tableIsEmpty tableName="book"/>
+            <tableIsEmpty tableName="publisher"/>
+            <tableIsEmpty tableName="author_book"/>
+        </preConditions>
+
+        <sqlFile path="data.sql"/>
+
+    </changeSet>
 </databaseChangeLog>
